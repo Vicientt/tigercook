@@ -16,6 +16,7 @@ function AIResult() {
   
   const location = useLocation()
   const isFromFavorite = location.state?.from === "favorite"
+  const isFromExplore = location.state?.from === "explore"
 
   useEffect(() => {
     const raw = localStorage.getItem("currentRecipe");
@@ -110,10 +111,11 @@ function AIResult() {
           <div className="flex justify-between items-center mb-7">
             <div className="flex items-center gap-2">
               <h2 className="text-[22px] font-bold text-[#1a1a1a] m-0">
-                {isFromFavorite ? 'Your Favorite Recipe' : 'Your Generated Recipe'}
+                {isFromFavorite ? 'Your Favorite Recipe' : isFromExplore ? 'Your Explored Recipe' : 'Your Generated Recipe'}
               </h2>
             </div>
             <div className="flex gap-2.5">
+              {!isFromExplore && (
               <button
                 className="py-2 px-5 rounded-full text-sm font-medium cursor-pointer transition-all bg-white border-[1.5px] border-[#f59e0b] text-[#f59e0b] hover:bg-[#f59e0b] hover:text-white disabled:opacity-60 disabled:cursor-not-allowed"
                 onClick={saveRecipe}
@@ -121,7 +123,8 @@ function AIResult() {
               >
                 {savedToFirestore ? "✓ Saved" : isSaving ? "Saving…" : "🤍 Save"}
               </button>
-              {!isFromFavorite && (
+              )}
+              {(!isFromFavorite && !isFromExplore) && (
                 <button
                   className="py-2 px-5 rounded-full text-sm font-medium cursor-pointer transition-all bg-white border-[1.5px] border-[#e5e5e5] text-[#666] hover:border-[#ccc] hover:text-[#333]"
                   onClick={() => navigate("/generate")}
