@@ -1,4 +1,4 @@
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase.js";
@@ -110,7 +110,7 @@ function Login() {
             </div>
 
             <label className="text-[13px] font-medium text-[#444] mb-1.5">Password</label>
-            <div className="relative mb-5">
+            <div className="relative mb-2">
               <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base leading-none pointer-events-none">
                 🔒
               </span>
@@ -122,6 +122,14 @@ function Login() {
                 autoComplete="current-password"
                 className="w-full py-3 px-3 pl-[42px] rounded-xl border-[1.5px] border-[#ebebeb] bg-[#fafafa] text-sm text-[#333] box-border transition-all focus:outline-none focus:border-[#f59e0b] focus:bg-white focus:shadow-[0_0_0_3px_rgba(245,158,11,0.12)]"
               />
+            </div>
+            <div className="flex justify-end mb-5">
+              <Link
+                to="/forgot-password"
+                className="text-[12px] text-[#f59e0b] hover:underline font-medium"
+              >
+                Forgot password?
+              </Link>
             </div>
 
             <button

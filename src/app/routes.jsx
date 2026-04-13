@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Login from "../pages/Login.jsx";
 import SignUp from "../pages/SignUp.jsx";
+import ForgotPassword from "../pages/ForgotPassword.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 import GenerateRecipe from "../pages/GenerateRecipe.jsx";
 import AIResult from "../pages/AIResult.jsx";
@@ -13,6 +14,7 @@ import ProtectedLayout from "../components/ProtectedLayout.jsx";
 export const router = createBrowserRouter([
   { path: "/login", Component: Login },
   { path: "/signup", Component: SignUp },
+  { path: "/forgot-password", Component: ForgotPassword },
   {
     element: <ProtectedLayout />,
     children: [
