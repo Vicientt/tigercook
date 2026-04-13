@@ -18,7 +18,7 @@ export default function SignUp() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
-  const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const regex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
   if (!loading && user) {
     return <Navigate to="/dashboard" replace />;
