@@ -1,70 +1,134 @@
-# Getting Started with Create React App
+# TigerCook 🍳
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An AI-powered recipe generator for college students. Enter your budget, servings, cooking time, diet, and cuisine preference — TigerCook calls GPT-3.5-turbo and returns a fully structured recipe with ingredients, steps, and nutrition data.
 
-## Available Scripts
+**Live demo:** [main.da2b7mgpkz0d5.amplifyapp.com](https://main.da2b7mgpkz0d5.amplifyapp.com)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **AI Recipe Generator** — 5 user constraints (budget, servings, time, diet, cuisine) sent to GPT-3.5-turbo, response parsed as structured JSON
+- **Explore** — Browse 8 curated recipes with real-time search
+- **Favorites** — Save AI-generated recipes to Firebase Firestore, view and delete them anytime
+- **Authentication** — Email/password sign-up, login, forgot password, and profile management via Firebase Auth
+- **Grocery links** — One-click redirect to Walmart and Kroger to buy ingredients
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, React Router 7, Tailwind CSS 4 |
+| Build | Vite 6 |
+| Auth & Database | Firebase Auth, Firebase Firestore |
+| AI | OpenAI GPT-3.5-turbo API |
+| Testing | Vitest, React Testing Library, Playwright |
+| CI | GitHub Actions |
+| Deployment | AWS Amplify |
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Getting Started
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Prerequisites
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Node.js 20+
+- A Firebase project with Auth and Firestore enabled
+- An OpenAI API key
 
-### `npm run eject`
+### Setup
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+git clone https://github.com/Vicientt/tigercook.git
+cd tigercook
+npm install
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Create a `.env` file at the project root:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```env
+VITE_FIREBASE_API_KEY=your_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_project.firebasestorage.app
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_OPENAI_API_KEY=your_openai_key
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Run locally
 
-## Learn More
+```bash
+npm run dev
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Open [http://localhost:5173](http://localhost:5173).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Testing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The project has **25 automated tests** across 3 tiers.
 
-### Analyzing the Bundle Size
+### Unit + Frontend tests (no setup needed)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```bash
+npm run test:unit      # 7 unit tests — prompt builder, recipes data, Firestore util
+npm run test:frontend  # 12 component tests — Login, SignUp, ForgotPassword, etc.
+```
 
-### Making a Progressive Web App
+### E2E tests (requires Firebase emulators)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+**1. Install Firebase CLI and Playwright browser:**
 
-### Advanced Configuration
+```bash
+npm install -g firebase-tools
+npx playwright install chromium
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+**2. Start Firebase emulators in a separate terminal:**
 
-### Deployment
+```bash
+firebase emulators:start --only auth,firestore --project your_project_id
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+**3. Run E2E tests:**
 
-### `npm run build` fails to minify
+```bash
+VITE_USE_FIREBASE_EMULATOR=true npm run test:e2e
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The E2E suite covers login, recipe generation (with mocked OpenAI), the full save-to-Firestore flow, and the Favorites page — all without using real API credentials.
+
+---
+
+## Project Structure
+
+```
+src/
+├── app/          # Router and App root
+├── components/   # Header, Footer, ProtectedRoute, UI primitives
+├── hooks/        # useAuth
+├── pages/        # Login, SignUp, ForgotPassword, Dashboard, GenerateRecipe,
+│                 # AIResult, Explore, Favorite, Profile
+├── utils/        # recipeGenerationPrompt, getUserRecipes, recipes (static data)
+├── firebase.js   # Firebase init + emulator connector
+└── tests/
+    ├── frontend/ # React Testing Library component tests
+    └── unit/     # Pure function tests
+e2e/              # Playwright E2E specs
+.github/
+└── workflows/
+    └── ci.yml    # GitHub Actions CI pipeline
+```
+
+---
+
+## CI Pipeline
+
+GitHub Actions runs on every push and pull request to `main`:
+
+- **Job 1 — Unit & Frontend:** runs all Vitest tests with no external services
+- **Job 2 — E2E:** spins up Firebase Auth + Firestore emulators, starts the Vite dev server, then runs Playwright against the full app
